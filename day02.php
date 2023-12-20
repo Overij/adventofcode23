@@ -6,7 +6,7 @@
 
 $inputs = file('input/day02.txt', FILE_IGNORE_NEW_LINES);
 
-$sum = 0;
+$sum1 = $sum2 = 0; // Part 1
 
 foreach ($inputs as $line)
 {
@@ -14,6 +14,7 @@ foreach ($inputs as $line)
     $game = (int) $matches['id'];
     $hands = explode(';', $matches['hands']);
     $invalid = false;
+    $red = $green = $blue = 0;
 
     foreach ($hands as $hand)
     {
@@ -22,17 +23,24 @@ foreach ($inputs as $line)
         /** @var array */ $colors = $matches['color'];
         $combined = array_combine($colors, $counts) + ['red' => 0, 'green' => 0, 'blue' => 0];
 
-        if ($combined['red'] > 12 || $combined['green'] > 13 || $combined['blue'] > 14)
+        // Part 1
+        if (!$invalid && $combined['red'] > 12 || $combined['green'] > 13 || $combined['blue'] > 14)
         {
             $invalid = true;
-            break;
         }
+
+        // Part 2
+        $red = max($red, $combined['red']);
+        $green = max($green, $combined['green']);
+        $blue = max($blue, $combined['blue']);
     }
 
     if (!$invalid)
     {
-        $sum += $game;
+        $sum1 += $game;
     }
+
+    $sum2 += ($red * $green * $blue);
 }
 
-echo $sum . \PHP_EOL;
+echo $sum1 . \PHP_EOL . $sum2 . \PHP_EOL;
