@@ -6,14 +6,16 @@
 
 $inputs = file('input/day03.txt', FILE_IGNORE_NEW_LINES);
 
+
 $grid = array_merge(
     [array_fill(0, strlen($inputs[0]) + 2, '.')],
     array_map(fn ($x) => ['.', ...str_split($x), '.'], $inputs),
     [array_fill(0, strlen($inputs[0]) + 2, '.')]
 );
 
-$sum = 0;
+$sum1 = $sum2 = 0;
 $row = 0;
+$gears = [];
 
 foreach ($inputs as $line)
 {
@@ -23,28 +25,42 @@ foreach ($inputs as $line)
     foreach ($matches['num'] as $num)
     {
         $startingPos = strpos($line, $num, $offset);
-        $offset = $startingPos + 1;
         $numLength = strlen($num);
+        $offset = $startingPos + $numLength;
+        $alreadySummed = false;
         $adjacent = [];
 
         // Same row, left and right adjacent
-        $adjacent[] = $grid[$row + 1][$startingPos];
-        $adjacent[] = $grid[$row + 1][$startingPos + $numLength + 1];
+        $adjacent[] = [$row + 1, $startingPos];
+        $adjacent[] = [$row + 1, $startingPos + $numLength + 1];
 
         // Top and bottom adjacent
         for ($i = $startingPos; $i < $startingPos + $numLength + 2; ++$i)
         {
-            $adjacent[] = $grid[$row][$i];
-            $adjacent[] = $grid[$row + 2][$i];
+            $adjacent[] = [$row, $i];
+            $adjacent[] = [$row + 2, $i];
         }
 
-        if (count(array_filter($adjacent, fn ($x) => $x !== '.')) > 0)
+        foreach ($adjacent as [$y, $x])
         {
-            $sum += (int) $num;
+            // Part 1
+            if (!$alreadySummed && $grid[$y][$x] !== '.')
+            {
+                $sum1 += (int) $num;
+                $alreadySummed = true;
+            }
+            
+            // Part 2
+            if ($grid[$y][$x] === '*')
+            {
+                $gears[$x . 'x' . $y][] = (int) $num;
+            }
         }
     }
 
     ++$row;
 }
 
-echo $sum . \PHP_EOL;
+$sum2 = array_reduce($gears, fn ($carry, $item) => count($item) == 2 ? $carry + array_product($item) : $carry, 0);
+
+echo $sum1 . \PHP_EOL . $sum2 . \PHP_EOL;
