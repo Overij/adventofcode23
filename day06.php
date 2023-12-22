@@ -45,4 +45,8 @@ $distance = (int) implode('', $matches2['num']);
 $x1 = ($time + sqrt($time**2 - 4 * $distance)) / 2;
 $x2 = ($time - sqrt($time**2 - 4 * $distance)) / 2;
 
+// $x2 < $x < $x1 so we need to handle floats
+$x1 = is_int($x1) ? $x1 - 1 : (int) floor($x1);
+$x2 = is_int($x2) ? $x2 + 1 : (int) ceil($x2);
+
 echo (int) ($x1 - $x2 + 1) . \PHP_EOL;
