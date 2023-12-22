@@ -17,7 +17,7 @@ $maps = [
     'temperature-to-humidity' => [],
     'humidity-to-location' => []
 ];
-$locations1 = $locations2 = [];
+$locations1 = [];
 
 // Map parsing
 for ($i = 1; $i < count($inputs); ++$i)
@@ -44,11 +44,7 @@ foreach ($seeds as $seed)
     $locations1[] = $number;
 }
 
-// Part 2:
-foreach (array_chunk($seeds, 2) as [$src, $len])
-{
-    
-}
+// Part 2: TODO :(
 
 function plot(int $num, array $map) : int
 {
@@ -64,17 +60,4 @@ function plot(int $num, array $map) : int
     return $num;
 }
 
-function plot2(int $src, int $len, $map) : array
-{
-    $ranges = [];
-
-    foreach ($map as [$dest, $src, $len])
-    {
-        
-    }
-
-
-    return $ranges;
-}
-
-echo min($locations1) . \PHP_EOL . min($locations2) . \PHP_EOL;
+echo min($locations1) . \PHP_EOL;
